@@ -40,5 +40,8 @@ def check_login(request):
         TIP = 0
         return HttpResponse(json.dumps(ret))
     elif 'window.code=200' in r1.text:
-        print(r1.text)
+        r2=requests.get(
+            url='https://wx.qq.com/cgi-bin/mmwebwx-bin/webwxnewloginpage?ticket=AUUOogBJeCyluiGQjhuDWDit@qrticket_0&uuid=gZUxj07Leg==&lang=zh_CN&scan=1546960482&fun=new&version=v2&lang=zh_CN'
+        )
+        print(r2.text)
         return HttpResponse('....')
