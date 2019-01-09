@@ -7,6 +7,10 @@ import json
 CTIME =None
 QCODE=None
 TIP = 1
+
+ticket_dict={}
+
+
 def login(request):
     global CTIME
     CTIME = time.time()
@@ -47,6 +51,11 @@ def check_login(request):
         redirect_uri = re.findall('window.redirect_uri="(.*)";',r1.text)[0]
         redirect_uri =redirect_uri + "&fun=new&version=v2"
         r2 =requests.get(redirect_uri)
-        print(r2.text)
-        #print(r2.text)
+        from bs4 import  BeautifulSoup
+        soup=BeautifulSoup(r2.text,'html.parser')
+        for tag in soup.find('error').children:
+            ticket_dict[tag.name]=tag.get_text()
+
+        print(ticket_dict)
+
         return HttpResponse('....')
