@@ -50,12 +50,33 @@ def check_login(request):
         """
         redirect_uri = re.findall('window.redirect_uri="(.*)";',r1.text)[0]
         redirect_uri =redirect_uri + "&fun=new&version=v2"
+        #获取凭证
         r2 =requests.get(redirect_uri)
         from bs4 import  BeautifulSoup
         soup=BeautifulSoup(r2.text,'html.parser')
         for tag in soup.find('error').children:
             ticket_dict[tag.name]=tag.get_text()
+        #登录成功后跳转url
+        #https://wx.qq.com/cgi-bin/mmwebwx-bin/webwxinit?r=-1033971935&pass_ticket=tvrtpoZJevFWWnDsQeUo6wqG9RSEASuS8bd1ccreDSgU%252FSOkgXMlmU9%252FFwb6dY%252FV
+        get_user_info_data = {
+            'BaseRequest':{
+                'DeviceID': "e066056526091623",
+                'Sid':ticket_dict['wxsid'],
+                'Skey':ticket_dict['skey'],
+                'Uin':ticket_dict['wxuin'],
+            }
+        }
+        get_user_info_url="https://wx.qq.com/cgi-bin/mmwebwx-bin/webwxinit?r=-1033971935&pass_ticket="+ticket_dict['pass_ticket']
+        r3=requests.post(
+            url=get_user_info_url,
+            json=get_user_info_data
+        )
+        r3.encoding="utf-8"
+        user_init_dict=json.loads(r3.text)
+        #print(ticket_dict)
+        #获取用户信息
+        print(user_init_dict)
 
-        print(ticket_dict)
+
 
         return HttpResponse('....')
