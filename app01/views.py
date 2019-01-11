@@ -76,7 +76,4 @@ def check_login(request):
         #print(ticket_dict)
         #获取用户信息
         print(user_init_dict)
-
-
-
         return HttpResponse('....')
